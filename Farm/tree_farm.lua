@@ -78,32 +78,16 @@ function EndJourney()
 end
 
 
--- function FillFuel()
--- 	dataItem, _ = turtle.getItemDetail(2)
--- 	fuelCount = dataItem["count"]
-	
--- 	turtle.select(2)
-
--- 	if fuelCount - 1 > 0 then
--- 		turtle.refuel(fuelCount-1)
--- 	end
--- end
-
 function FillFuel()
-	turtle.select(2)
-	local dataItem, _ = turtle.getItemDetail()
-	local item = dataItem["name"]
+	local dataItem, _ = turtle.getItemDetail(2)
+	local fuelCount = dataItem["count"]
 	
-	if item == "minecraft:daylight_detector" then
-		turtle.equipLeft()
+	turtle.select(2)
+
+	if fuelCount - 1 > 0 then
+		turtle.refuel(fuelCount-1)
 	end
-
-	os.sleep(1820)
-
-	turtle.equipLeft()
-
 end
-
 
 while true do
 	--FillFuel()
