@@ -1,9 +1,15 @@
 local block_moved = 2
 
 function SuckAround()
+    local success = turtle.down()
+
     for i = 1, 4 do
         turtle.turnRight()
         turtle.suck()
+    end
+
+    if success then
+        turtle.up()
     end
 end
 
@@ -98,9 +104,9 @@ while true do
 	if data["name"] == "minecraft:oak_log" then
 		ChopTree()
 	else
-		os.sleep(60)
+		-- os.sleep(60)
 		EndJourney()
-		-- os.sleep(1820)
+		os.sleep(1820)
 		FillFuel()
 	end
 end
