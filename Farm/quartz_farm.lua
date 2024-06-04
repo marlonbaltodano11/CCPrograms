@@ -65,7 +65,11 @@ local function replenish()
     local fuelSlot = 1
 
     for i = 1, 16, 1 do
-        local name = turtle.getItemDetail(i)["name"]
+        local name = ""
+        
+        if turtle.getItemCount(i) > 0 then
+            name = turtle.getItemDetail(i)["name"]
+        end
 
         if name == "minecraft:charcoal" then
             fuelSlot = i
@@ -81,7 +85,11 @@ local function findQuartzBlocks()
     local quartzSlot = 1
     
     for i = 1, 16, 1 do
-        local name = turtle.getItemDetail(i)["name"]
+        local name = ""
+        
+        if turtle.getItemCount(i) > 0 then
+            name = turtle.getItemDetail(i)["name"]
+        end
 
         if name == "minecraft:charcoal" then
             quartzSlot = i
