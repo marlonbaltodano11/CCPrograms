@@ -12,6 +12,9 @@ local invert = false
 local function reset()
     facing = "up"
     invert = false
+    redstone.setOutput("left", true)
+    os.sleep(60)
+    redstone.setOutput("left", false)
 end
 
 
@@ -201,7 +204,6 @@ local function main()
         replantQuartz()
         unloadMerchandise()
         reset()
-        os.sleep(60)
     end
 end
 
