@@ -79,6 +79,7 @@ local function replenish()
 
     turtle.select(fuelSlot)
     turtle.refuel()
+    turtle.turnAround()
 end
 
 local function findQuartzBlocks()
@@ -91,7 +92,7 @@ local function findQuartzBlocks()
             name = turtle.getItemDetail(i)["name"]
         end
 
-        if name == "minecraft:charcoal" then
+        if name == "ae2:flawed_budding_quartz" then
             quartzSlot = i
             break
         end
@@ -101,7 +102,7 @@ local function findQuartzBlocks()
 end
 
 local function collectQuartz()
-    for x = 1, max_x - 1, 1 do
+    for x = 1, max_x, 1 do
         for y = 1, max_y, 1 do
 
             local isOccupied, data = turtle.inspectDown()
@@ -132,7 +133,9 @@ local function collectQuartz()
                 turtle.forward()
             end
         end
-        makeTurn()
+        if x < max_x then
+            makeTurn()
+        end
     end
 end
 
@@ -140,7 +143,7 @@ local function replantQuartz()
     turtle.turnAround()
     invert = true
 
-    for x = 1, max_x - 1, 1 do
+    for x = 1, max_x, 1 do
         for y = 1, max_y, 1 do
 
             local isOccupied, data = turtle.inspectDown()
@@ -175,7 +178,9 @@ local function replantQuartz()
                 turtle.forward()
             end
         end
-        makeTurn()
+        if x < max_x then
+            makeTurn()
+        end
     end
 
     turtle.turnAround()
