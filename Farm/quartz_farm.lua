@@ -182,6 +182,13 @@ local function replantQuartz()
             makeTurn()
         end
     end
+end
+
+local function unloadMerchandise()
+    for i = 1, 16, 1 do
+        turtle.select(i)
+        turtle.drop()
+    end
 
     turtle.turnAround()
 end
@@ -192,8 +199,9 @@ local function main()
         collectQuartz()
         findQuartzBlocks()
         replantQuartz()
+        unloadMerchandise()
         reset()
-        os.sleep(20)
+        os.sleep(60)
     end
 end
 
