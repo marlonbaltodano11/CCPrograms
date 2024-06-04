@@ -94,8 +94,7 @@ end
 
 local function collectQuartz()
     for x = 1, max_x - 1, 1 do
-        for y = 1, max_y - 1, 1 do
-            turtle.forward()
+        for y = 1, max_y, 1 do
 
             local isOccupied, data = turtle.inspectDown()
 
@@ -117,8 +116,12 @@ local function collectQuartz()
                 end
             end
 
-            if turtle.detect() and y < max_y - 1 then
+            if turtle.detect() and y < max_y then
                 turtle.dig()
+            end
+
+            if y < max_y then
+                turtle.forward()
             end
         end
         makeTurn()
@@ -130,8 +133,7 @@ local function replantQuartz()
     invert = true
 
     for x = 1, max_x - 1, 1 do
-        for y = 1, max_y - 1, 1 do
-            turtle.forward()
+        for y = 1, max_y, 1 do
 
             local isOccupied, data = turtle.inspectDown()
 
@@ -157,8 +159,12 @@ local function replantQuartz()
                 end
             end
             
-            if turtle.detect() and y < max_y - 1 then
+            if turtle.detect() and y < max_y then
                 turtle.dig()
+            end
+
+            if y < max_y then
+                turtle.forward()
             end
         end
         makeTurn()
