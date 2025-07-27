@@ -14,7 +14,7 @@ local DROP_DIRECTION_MAP = {
     ['front'] = turtle.drop
 }
 local UNLOAD_CHEST_DIRECTION = 'down'
-local unloadTurtle = DROP_DIRECTION_MAP['UNLOAD_CHEST_DIRECTION']
+local unloadTurtle = DROP_DIRECTION_MAP[UNLOAD_CHEST_DIRECTION]
 
 local FUEL_PER_COAL = 80
 local FUEL_LIMIT = 5120
@@ -29,14 +29,18 @@ local BLOCK_TO_REPLACE = {
 local facing = 0 -- Stores the facing position of the turtle. Goes from 0 to 3, clockwise.
 
 local FACING_MOVE_CHANGE = {
-    {0, 0, 1},
-    {1, 0, 0},
-    {0, 0, -1},
-    {-1, 0, 0}
+    [0] = {[0] = 0, [1] = 0, [2] = 1},
+    [1] = {[0] = 1, [1] = 0, [2] = 0},
+    [2] = {[0] = 0, [1] = 0, [2] = -1},
+    [3] = {[0] = -1, [1] = 0, [2] = 0}
 }
 
 -- Stores the current position of the turtle (x, y, z)
-local turtlePosition = {0, 0, -1}
+local turtlePosition = {
+    [0] = 0,
+    [1] = 0,
+    [2] = -1
+}
 
 local function locateResource(resourceName)
     -- Get the resource location within the turtle inventory. Return the resource location
@@ -45,10 +49,12 @@ local function locateResource(resourceName)
 
     for slot = 1, 16, 1 do
         item = turtle.getItemDetail(slot)
-
-        if item['name'] == resourceName then
-            itemLocation = slot
-            break
+        
+        if item then
+            if item['name'] == resourceName then
+                itemLocation = slot
+                break
+            end
         end
     end
 
@@ -69,7 +75,7 @@ local function refuelTurtle()
 
     if missingFuel > 0 then
         turtle.select(slot)
-        turtle.refuel(missingFuel // FUEL_PER_COAL) 
+        turtle.refuel(math.floor(missingFuel / FUEL_PER_COAL)) 
     end
 end
 
@@ -180,7 +186,6 @@ local function turnAround()
     turnLeft()
 end
 
-
 local function stepRoutine(stepType)
     -- A function that execute on the step of the turtle
     if not isExcludedBlock('down') then
@@ -192,33 +197,36 @@ local function stepRoutine(stepType)
             turtle.digDown()
         end
     end
+end
 
+local function changeLane(stepType)
     if stepType == 'forward' then
         if facing == 0 then
-            turtle.turnRight()
+            turnRight()
             turtle.dig()
-            turtle.forward()
-            turtle.turnRight()
+            moveForward()
+            turnRight()
         elseif facing == 2 then
-            turtle.turnLeft()
+            turnLeft()
             turtle.dig()
-            turtle.forward()
-            turtle.turnLeft()
+            moveForward()
+            turnLeft()
         end
         
-    elseif stepType == 'backward'  then
+    elseif stepType == 'backward' then
         if facing == 0 then
-            turtle.turnLeft()
+            turnLeft()
             turtle.dig()
-            turtle.forward()
-            turtle.turnLeft()
+            moveForward()
+            turnLeft()
         elseif facing == 2 then
-            turtle.turnRight()
+            turnRight()
             turtle.dig()
-            turtle.forward()
-            turtle.turnRight()
+            moveForward()
+            turnRight()
         end
     end
+    stepRoutine(stepType)
 end
 
 local function moveAlongZLimit(stepType)
@@ -231,10 +239,18 @@ local function moveAlongZLimit(stepType)
     }
 
     local direction = directionMap[facing]
-    
+
     if direction == "forward" then
-        while turtlePosition[2] < Z_LIMIT do
+        while turtlePosition[2] < Z_LIMIT - 1 do
             turtle.dig()
+            moveForward()
+            stepRoutine(stepType)
+        end
+    elseif direction == "backward" and stepType == "backward" and turtlePosition[0] == 0 then
+        while turtlePosition[2] > -1 do
+            if turtlePosition[2] > 0 then
+                turtle.dig()
+            end
             moveForward()
             stepRoutine(stepType)
         end
@@ -244,6 +260,10 @@ local function moveAlongZLimit(stepType)
             moveForward()
             stepRoutine(stepType)
         end
+    end
+    
+    if (turtlePosition[0] > 0 or stepType == "forward") and (turtlePosition[0] < X_LIMIT - 1 or stepType == "backward") then
+        changeLane(stepType)
     end
 end
 
@@ -257,17 +277,28 @@ local function tourRoutine()
         else
             break
         end
+
+        -- Check if we reached the end position
+        if turtlePosition[0] == X_LIMIT - 1 and ((facing == 0 and turtlePosition[2] == Y_LIMIT - 1) or (facing == 2 and turtlePosition[2] == 0)) then
+            break
+        end
     end
 end
 
 local function returnRoutine()
     -- Retorna la tortuga a la posición inicial.
-    while turtlePosition[0] > -1 do
+
+    while turtlePosition[0] >= 0 do
         if facing == 0 then
             moveAlongZLimit('backward')
         elseif facing == 2 then
             moveAlongZLimit('backward')
         else
+            break
+        end
+
+        -- Check if we reached the start position
+        if turtlePosition[0] == 0 and turtlePosition[2] == -1 then
             break
         end
     end
