@@ -20,7 +20,7 @@ local FUEL_PER_COAL = 80
 local FUEL_LIMIT = 5120
 
 local EXCLUDED_BLOCKS = {"ae2:flawed_budding_quartz", "ae2:chipped_budding_quartz", "ae2:damaged_budding_quartz", "ae2:growth_accelerator"}
-local EXCLUDED_UNLOAD_ITEMS = {"minecraft:coal"}
+local EXCLUDED_UNLOAD_ITEMS = {"minecraft:coal", "ae2:flawed_budding_quartz"}
 
 local BLOCK_TO_REPLACE = {
     ["ae2:quartz_block"] = "ae2:flawed_budding_quartz"
@@ -279,7 +279,7 @@ local function tourRoutine()
         end
 
         -- Check if we reached the end position
-        if turtlePosition[0] == X_LIMIT - 1 and ((facing == 0 and turtlePosition[2] == Y_LIMIT - 1) or (facing == 2 and turtlePosition[2] == 0)) then
+        if turtlePosition[0] == X_LIMIT - 1 and ((facing == 0 and turtlePosition[2] == Z_LIMIT - 1) or (facing == 2 and turtlePosition[2] == 0)) then
             break
         end
     end
