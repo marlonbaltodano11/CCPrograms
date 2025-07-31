@@ -307,15 +307,20 @@ end
 local function main()
     -- The main routine function
     while true do
-        refuelTurtle()
-        turtle.up()
-        tourRoutine()
-        turnAround()
-        returnRoutine()
-        turnAround()
-        turtle.down()
-        unloadRoutine()
-        os.sleep(30)
+        if not redstone.getInput("left") then
+            refuelTurtle()
+            turtle.up()
+            tourRoutine()
+            turnAround()
+            returnRoutine()
+            turnAround()
+            turtle.down()
+            unloadRoutine()
+            os.sleep(30)
+        else
+            print("Certus Quartz Crystals Above Limit. Sleeping...")
+            os.sleep(100)
+        end
     end
 end
 main()
